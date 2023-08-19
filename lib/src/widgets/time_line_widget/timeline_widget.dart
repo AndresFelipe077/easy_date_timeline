@@ -10,6 +10,8 @@ class TimeLineWidget extends StatefulWidget {
   TimeLineWidget({
     super.key,
     required this.initialDate,
+    this.startDate,
+    this.endDate,
     this.dayProps = const EasyDayProps(),
     this.locale = "en_US",
     this.timeLineProps = const EasyTimeLineProps(),
@@ -31,6 +33,19 @@ class TimeLineWidget extends StatefulWidget {
 
   /// The currently focused date in the timeline.
   final DateTime? focusedDate;
+
+  /// Represents the timeline start day (inclusive) that can be used to limit on what
+  /// day the timeline starts.
+  /// Used in conjunction with `endDate`. Both `startDate` and `endDate` must have a value
+  /// in order to limit the timeline range.
+  final DateTime? startDate;
+
+  /// Represents the timeline end day (exclusive) that can be used to limit on what
+  /// day the timeline ends.
+  /// endDate is exclusive, meaning timeline will not include the endDate itself as a day.
+  /// Used in conjunction with `startDate`. Both `startDate` and `endDate` must have a value
+  /// in order to limit the timeline range.
+  final DateTime? endDate;
 
   /// Contains properties for configuring the appearance and behavior of the timeline widget.
   /// This object includes properties such as the height of the timeline, the color of the selected day,
@@ -70,8 +85,13 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
   double get _dayWidth => _dayProps.width;
   double get _dayHeight => _dayProps.height;
   double get _dayOffsetConstrains => _isLandscapeMode ? _dayHeight : _dayWidth;
+  bool get _isRangeLimited =>
+      (widget.startDate != null && widget.endDate != null);
 
   late ScrollController _controller;
+  late DateTime? startDate;
+  late DateTime? endDate;
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +99,9 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
     _controller = ScrollController(
       initialScrollOffset: _calculateDateOffset(widget.initialDate),
     );
+
+    startDate = widget.startDate;
+    endDate = widget.endDate;
   }
 
   @override
@@ -95,7 +118,9 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
   /// (which is either the value of widget.easyDayProps.width or a default value of EasyConstants.dayWidgetWidth).
   /// It then adds to this value the product of offset and [EasyConstants.separatorPadding] (which represents the width of the space between each day widget)
   double _calculateDateOffset(DateTime date) {
-    final startDate = DateTime(date.year, date.month, 1);
+    final startDate = _isRangeLimited
+        ? DateTime(date.year, date.month, widget.startDate!.day)
+        : DateTime(date.year, date.month, 1);
     int offset = date.difference(startDate).inDays;
     double adjustedHPadding =
         _timeLineProps.hPadding > EasyConstants.timelinePadding
@@ -104,6 +129,12 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
     if (offset == 0) {
       return 0.0;
     }
+
+    // If timeline range is limited, make the initialDate show in the center
+    if (_isRangeLimited) {
+      offset = (offset / 2).floor();
+    }
+
     return (offset * _dayOffsetConstrains) +
         (offset * _timeLineProps.separatorPadding) +
         adjustedHPadding;
@@ -131,8 +162,11 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
             vertical: _timeLineProps.vPadding,
           ),
           itemBuilder: (context, index) {
-            final currentDate = DateTime(initialDate.year, initialDate.month, 1)
-                .add(Duration(days: index));
+            final currentDate = _isRangeLimited
+                ? DateTime(startDate!.year, startDate!.month, startDate!.day)
+                    .add(Duration(days: index))
+                : DateTime(initialDate.year, initialDate.month, 1)
+                    .add(Duration(days: index));
             final isSelected = widget.focusedDate != null
                 ? EasyDateUtils.isSameDay(widget.focusedDate!, currentDate)
                 : EasyDateUtils.isSameDay(widget.initialDate, currentDate);
@@ -153,7 +187,9 @@ class _TimeLineWidgetState extends State<TimeLineWidget> {
               width: _timeLineProps.separatorPadding,
             );
           },
-          itemCount: EasyDateUtils.getDaysInMonth(initialDate),
+          itemCount: _isRangeLimited
+              ? endDate!.difference(startDate!).inDays
+              : EasyDateUtils.getDaysInMonth(initialDate),
         ),
       ),
     );

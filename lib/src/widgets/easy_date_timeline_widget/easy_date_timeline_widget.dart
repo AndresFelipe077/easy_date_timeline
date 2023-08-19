@@ -13,6 +13,8 @@ class EasyDateTimeLine extends StatefulWidget {
   const EasyDateTimeLine({
     super.key,
     required this.initialDate,
+    this.startDate,
+    this.endDate,
     this.locale = "en_US",
     this.headerProps = const EasyHeaderProps(),
     this.timeLineProps = const EasyTimeLineProps(),
@@ -25,6 +27,19 @@ class EasyDateTimeLine extends StatefulWidget {
   /// Represents the initial date for the timeline widget.
   /// This is the date that will be displayed as the first day in the timeline.
   final DateTime initialDate;
+
+  /// Represents the timeline start day (inclusive) that can be used to limit on what
+  /// day the timeline starts.
+  /// Used in conjunction with `endDate`. Both `startDate` and `endDate` must have a value
+  /// in order to limit the timeline range.
+  final DateTime? startDate;
+
+  /// Represents the timeline end day (exclusive) that can be used to limit on what
+  /// day the timeline ends.
+  /// endDate is exclusive, meaning timeline will not include the endDate itself as a day.
+  /// Used in conjunction with `startDate`. Both `startDate` and `endDate` must have a value
+  /// in order to limit the timeline range.
+  final DateTime? endDate;
 
   /// The color for the active day.
   final Color? activeColor;
@@ -60,6 +75,8 @@ class _EasyDateTimeLineState extends State<EasyDateTimeLine> {
   late ValueNotifier<DateTime?> _focusedDateListener;
 
   DateTime get initialDate => widget.initialDate;
+  DateTime? get startDate => widget.startDate;
+  DateTime? get endDate => widget.endDate;
   @override
   void initState() {
     // Init easy date timeline locale
@@ -145,6 +162,8 @@ class _EasyDateTimeLineState extends State<EasyDateTimeLine> {
               month: _easyMonth.vale,
             ),
             focusedDate: focusedDate,
+            startDate: startDate,
+            endDate: endDate,
             onDateChange: _onFocusedDateChanged,
             timeLineProps: widget.timeLineProps,
             dayProps: widget.dayProps,
