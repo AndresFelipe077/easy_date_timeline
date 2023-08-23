@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart' show TextStyle, EdgeInsets;
 
-final class EasyHeaderProps {
+class EasyHeaderProps {
   const EasyHeaderProps({
     this.showHeader = true,
     this.showSelectedDate = true,
+    this.showSelectedMonth = false,
     this.showMonthPicker = true,
     this.centerHeader = false,
     this.selectedDateFormat = SelectedDateFormat.dayOnly,
+    this.selectedMonthFormat = SelectedMonthFormat.monthOnly,
     this.monthPickerType = MonthPickerType.dropDown,
     this.selectedDateStyle,
+    this.selectedMonthStyle,
     this.monthStyle,
     this.padding,
   });
@@ -19,6 +22,9 @@ final class EasyHeaderProps {
   /// Whether to show the selected date in the header of the date timeline widget.
   final bool showSelectedDate;
 
+  /// Whether to show the selected month in the header of the date timeline widget.
+  final bool showSelectedMonth;
+
   /// Whether to show the month picker at the top of the date timeline widget.
   final bool showMonthPicker;
 
@@ -28,11 +34,17 @@ final class EasyHeaderProps {
   /// The format used to display the selected date in the header of the date timeline widget.
   final SelectedDateFormat selectedDateFormat;
 
+  /// The format used to display the selected month in the header of the date timeline widget.
+  final SelectedMonthFormat selectedMonthFormat;
+
   /// The type of month picker to use if [showMonthPicker] is true.
   final MonthPickerType monthPickerType;
 
   /// The text style applied to the selected date string in the header of the date timeline widget.
   final TextStyle? selectedDateStyle;
+
+  /// The text style applied to the selected month string in the header of the month timeline widget.
+  final TextStyle? selectedMonthStyle;
 
   /// The text style applied to the month string in the header of the date timeline widget.
   final TextStyle? monthStyle;
@@ -64,6 +76,17 @@ enum SelectedDateFormat {
   fullDateMonthAsStrDY("MMMM d, yyyy");
 
   const SelectedDateFormat(this.formatter);
+  final String formatter;
+}
+
+enum SelectedMonthFormat {
+  /// Show only the selected month as:"June"
+  monthOnly("MMMM"),
+
+  /// Show the data as:"June 2023"
+  fullMonthAsStrY("MMMM yyyy");
+
+  const SelectedMonthFormat(this.formatter);
   final String formatter;
 }
 

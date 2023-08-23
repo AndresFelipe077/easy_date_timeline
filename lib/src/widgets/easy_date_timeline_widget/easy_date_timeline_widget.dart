@@ -1,3 +1,5 @@
+import 'package:easy_date_timeline/src/widgets/easy_date_timeline_widget/selected_date_widget.dart';
+import 'package:easy_date_timeline/src/widgets/easy_date_timeline_widget/selected_month_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -6,7 +8,6 @@ import '../../properties/properties.dart';
 import '../../utils/utils.dart';
 import '../easy_month_picker/easy_month_picker.dart';
 import '../time_line_widget/timeline_widget.dart';
-import 'selected_date_widget.dart';
 
 /// Represents a timeline widget for displaying dates in a horizontal line.
 class EasyDateTimeLine extends StatefulWidget {
@@ -140,11 +141,22 @@ class _EasyDateTimeLineState extends State<EasyDateTimeLine> {
                     ? MainAxisAlignment.center
                     : MainAxisAlignment.spaceBetween,
                 children: [
-                  SelectedDateWidget(
-                    date: focusedDate ?? initialDate,
-                    locale: widget.locale,
-                    headerProps: _headerProps,
-                  ),
+                  if (_headerProps.showSelectedDate)
+                    SelectedDateWidget(
+                      date: focusedDate ?? initialDate,
+                      locale: widget.locale,
+                      headerProps: _headerProps,
+                    )
+                  else if (_headerProps.showSelectedMonth)
+                    SelectedMonthWidget(
+                      date: initialDate.copyWith(
+                        month: _easyMonth.vale,
+                      ),
+                      locale: widget.locale,
+                      headerProps: _headerProps,
+                    )
+                  else
+                    const SizedBox.expand(),
                   if (_showMonthPicker(pickerType: MonthPickerType.dropDown))
                     child!,
                   if (_showMonthPicker(pickerType: MonthPickerType.switcher))

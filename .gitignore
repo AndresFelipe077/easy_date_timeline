@@ -1,3 +1,9 @@
+# Flutter Version Manager
+.fvm/flutter_sdk
+
+# VsCode
+.vscode
+
 # Miscellaneous
 *.class
 *.log

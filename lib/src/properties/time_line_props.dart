@@ -1,7 +1,7 @@
 import 'package:easy_date_timeline/src/utils/easy_constants.dart';
 import 'package:flutter/material.dart' show Color, EdgeInsets, BoxDecoration;
 
-final class EasyTimeLineProps {
+class EasyTimeLineProps {
   const EasyTimeLineProps({
     this.hPadding = EasyConstants.timelinePadding,
     this.vPadding = 0.0,

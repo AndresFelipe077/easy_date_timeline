@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' show TextStyle, FontWeight;
 import 'utils.dart';
 
 /// A utility class that provides easy access to commonly used text styles in the `EasyDateTimeLine` widget.
-final class EasyTextStyles {
+class EasyTextStyles {
   EasyTextStyles._();
 
   /// The text style of the number representing the day.
@@ -27,6 +27,13 @@ final class EasyTextStyles {
 
   /// The text style of the selected date.
   static const TextStyle selectedDateStyle = TextStyle(
+    fontSize: EasyConstants.selectedDateFontSize,
+    fontWeight: FontWeight.bold,
+    color: EasyColors.dayAsNumColor,
+  );
+
+  /// The text style of the selected date.
+  static const TextStyle selectedMonthStyle = TextStyle(
     fontSize: EasyConstants.selectedDateFontSize,
     fontWeight: FontWeight.bold,
     color: EasyColors.dayAsNumColor,

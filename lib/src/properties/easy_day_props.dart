@@ -2,7 +2,7 @@ import 'package:flutter/material.dart' show BoxDecoration, Color, TextStyle;
 
 import '../utils/utils.dart';
 
-final class EasyDayProps {
+class EasyDayProps {
   const EasyDayProps({
     this.activeDayDecoration,
     this.inactiveDayDecoration,

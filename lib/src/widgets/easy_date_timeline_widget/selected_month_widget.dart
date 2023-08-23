@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+
+import '../../properties/properties.dart';
+import '../../utils/utils.dart';
+
+/// Represents a header widget for displaying the name of a month and year.
+class SelectedMonthWidget extends StatelessWidget {
+  const SelectedMonthWidget({
+    super.key,
+    required this.date,
+    this.headerProps,
+    required this.locale,
+  });
+
+  /// Represents the date for the month header.
+  final DateTime date;
+
+  /// A `String` that represents the locale code to use for formatting the month name in the header.
+  final String locale;
+
+  /// Contains properties for configuring the appearance and behavior of the month header.
+  final EasyHeaderProps? headerProps;
+
+  @override
+  Widget build(BuildContext context) {
+    ///  This code conditionally displays the selected date in the header of the EasyDateTimeLineWidget
+    ///  based on the showSelectedDate property of the headerProps object
+    ///  and formats it according to the selected date format.
+    return Visibility(
+      visible:
+          (headerProps == null ? true : headerProps!.showSelectedMonth == true),
+      child: Text(
+        headerProps != null
+            ? EasyDateFormatter.customFormat(
+                headerProps!.selectedMonthFormat.formatter,
+                date,
+                locale,
+              )
+            : EasyDateFormatter.customFormat(
+                SelectedMonthFormat.fullMonthAsStrY.formatter, date, locale),
+        style: headerProps?.selectedMonthStyle ??
+            EasyTextStyles.selectedMonthStyle,
+      ),
+    );
+  }
+}
